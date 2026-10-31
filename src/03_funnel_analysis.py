@@ -1,44 +1,47 @@
 import pandas as pd
-df = pd.read_csv("clean_user_behavior.csv")
-#统计各个行为的数量
-pv_count = len(df[df["behavior"] == "pv"])
-cart_count = len(df[df["behavior"] == "cart"])
-fav_count = len(df[df["behavior"] == "fav"])
-buy_count = len(df[df["behavior"] == "buy"])
-print("=====电商行为漏洞=====")
-print(f"浏览 pv: {pv_count}")
-print(f"浏览 cart: {cart_count}")
-print(f"浏览 fav: {fav_count}")
-print(f"浏览 buy: {buy_count}")
-print("\n=====转化率=====")
-print(f"浏览->加购转化率: {cart_count/pv_count:.2%}")
-print(f"浏览->收藏转化率: {fav_count/pv_count:.2%}")
-print(f"浏览->购买转化率: {buy_count/pv_count:.2%}")
-print(f"加购->购买转化率: {buy_count/cart_count:.2%}")
-
 import matplotlib.pyplot as plt
+import os
+
 plt.close("all")
-#设置中文
+# 解决中文字体显示问题
 plt.rcParams["font.sans-serif"] = ["SimHei"]
 plt.rcParams["axes.unicode_minus"] = False
-#数据
-stage = ["浏览","加购","收藏","购买"]
-nums = [77817,4720,2294,1820]
 
+# 1. 读取数据
+file_path = "clean_user_behavior.csv" # 建议后续改为 '../data/clean_user_behavior.csv'
+df = pd.read_csv(file_path)
 
-plt.figure(figsize=(10,6))
-plt.bar(stage,nums,color=["#4472C4","#5B9BD5","#70AD47","#ED7D31"])
-plt.yscale("log")   # 关键改动
+# 2. 动态计算各阶段数据（消除硬编码）
+stage = ["浏览(pv)", "加购(cart)", "收藏(fav)", "购买(buy)"]
+nums = [
+    len(df[df["behavior"] == "pv"]),
+    len(df[df["behavior"] == "cart"]),
+    len(df[df["behavior"] == "fav"]),
+    len(df[df["behavior"] == "buy"])
+]
+
+# 3. 绘图
+plt.figure(figsize=(10, 6))
+bars = plt.bar(stage, nums, color=["#4472C4", "#5B9BD5", "#70AD47", "#ED7D31"])
+
+# 对数坐标：解决 PV 与 Buy 之间巨大的量级差异
+plt.yscale("log")   
 plt.title("电商用户转化漏斗图（对数坐标）")
 plt.ylabel("行为次数（对数）")
-#柱上标数字
-for i,value in enumerate(nums):
-    plt.text(i,
-             value,
-             str(value),
-             ha="center",
-             va="bottom",
-             fontsize=11
-             )
-    plt.ylim(bottom=1000,top=max(nums)*2)
-    plt.show()
+plt.ylim(bottom=1000, top=max(nums) * 2) # 修复了你原本的缩进bug，移出循环
+
+# 在柱子上标出具体数值
+for bar in bars:
+    yval = bar.get_height()
+    plt.text(bar.get_x() + bar.get_width()/2, yval, 
+             int(yval), ha='center', va='bottom', fontsize=11)
+
+# 4. 保存图表（关键：工程化必须留痕）
+if not os.path.exists("../figures"):
+    os.makedirs("../figures")
+plt.savefig("../figures/funnel_log_scale.png", dpi=300, bbox_inches='tight')
+
+# 5. 展示
+plt.show()
+
+
