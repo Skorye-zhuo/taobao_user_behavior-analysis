@@ -1,1 +1,17 @@
-
+import pandas as pd
+df = pd.read_csv("clean_user_behavior.csv")
+#统计各个行为的数量
+pv_count = len(df[df["behavior"] == "pv"])
+cart_count = len(df[df["behavior"] == "cart"])
+fav_count = len(df[df["behavior"] == "fav"])
+buy_count = len(df[df["behavior"] == "buy"])
+print("=====电商行为漏洞=====")
+print(f"浏览 pv: {pv_count}")
+print(f"浏览 cart: {cart_count}")
+print(f"浏览 fav: {fav_count}")
+print(f"浏览 buy: {buy_count}")
+print("\n=====转化率=====")
+print(f"浏览->加购转化率: {cart_count/pv_count:.2%}")
+print(f"浏览->收藏转化率: {fav_count/pv_count:.2%}")
+print(f"浏览->购买转化率: {buy_count/pv_count:.2%}")
+print(f"加购->购买转化率: {buy_count/cart_count:.2%}")
