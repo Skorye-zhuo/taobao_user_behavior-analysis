@@ -20,3 +20,14 @@ print(df["behavior"].value_counts())
 #保存清洗好的数据，sql,绘图都用这个
 df.to_csv("clean_user_behavior.csv",index=False,encoding="utf-8")
 print("\n清洗完毕，已保存 clean_user_behavior.csv")
+input_file = r"UserBehavior.csv"
+output_file = r"small_UserBehavior.csv"
+max_rows=100000
+count = 0
+with open(input_file, encoding="utf-8") as fr, open(output_file, "w",encoding="utf-8") as fw:
+     for line in fr:
+         fw.write(line)
+         count = count + 1
+         if count >= max_rows:
+             break
+print("切割完成，已提取前{max_rows}行，保存为small_UserBehavior.csv")
