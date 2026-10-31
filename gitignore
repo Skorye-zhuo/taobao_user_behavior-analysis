@@ -1,0 +1,14 @@
+# 忽略数据文件
+data/*.csv
+data/raw/
+data/interim/
+!data/sample.csv
+
+# Python 相关
+__pycache__/
+*.py[cod]
+.env
+venv/
+
+# 系统文件
+.DS_Store
