@@ -35,6 +35,7 @@ plt.annotate(f'峰值：{max_hour}点\n{max_count}次',
               fontsize=11,
               color='red'
               )
+plt.savefig("../figures/图表名.png", dpi=300, bbox_inches='tight')
 plt.show()
 
 import pandas as pd
@@ -62,6 +63,7 @@ plt.grid(alpha=0.3)
 plt.legend() # 显示图例，区分两条线
 
 plt.tight_layout()
+plt.savefig("../figures/图表名.png", dpi=300, bbox_inches='tight')
 plt.show()
 
 
