@@ -1,4 +1,4 @@
-CREATE TABLE user_behavior (
+CREATE TABLE clean_user_behavior (
     user_id BIGINT,
     item_id BIGINT,
     category_id BIGINT,
